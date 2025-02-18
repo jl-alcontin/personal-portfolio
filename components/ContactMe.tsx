@@ -78,7 +78,7 @@ function ContactMe() {
         Contact
       </motion.h3>
 
-      <div className="w-full max-w-7xl mx-auto mt-32 sm:mt-0">
+      <div className="w-full max-w-7xl mx-auto mt-32">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           {/* Left Side - Contact Info */}
           <div className="space-y-8">
