@@ -24,19 +24,17 @@ export default function About({ pageInfo }: Props) {
     {
       title: "Experience",
       icon: Briefcase,
-      content: "Pushing the boundaries of digital innovation with years of hands-on experience in web development.",
+      content: pageInfo?.experienceInformation,
     },
     {
       title: "Technical",
       icon: Code,
-      content:
-        "Expertise in modern web technologies and frameworks, focusing on creating efficient and scalable solutions.",
+      content: pageInfo.technicalInformation,
     },
     {
       title: "Creative",
       icon: Palette,
-      content:
-        "Combining technical skills with creative design thinking to build unique and engaging user experiences.",
+      content: pageInfo.creativeInformation,
     },
   ]
 

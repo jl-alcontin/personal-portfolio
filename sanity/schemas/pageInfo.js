@@ -28,6 +28,21 @@ export default {
       type: "string",
     },
     {
+      name: "experienceInformation",
+      title: "ExperienceInformation",
+      type: "string",
+    },
+    {
+      name: "technicalInformation",
+      title: "TechnicalInformation",
+      type: "string",
+    },
+    {
+      name: "creativeInformation",
+      title: "CreativeInformation",
+      type: "string",
+    },
+    {
       name: "profilePic",
       title: "ProfilePic",
       type: "image",
