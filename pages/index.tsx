@@ -1,4 +1,4 @@
-import type { GetStaticProps } from "next";
+import type { GetServerSideProps, GetStaticProps } from "next";
 import { Fragment, useEffect, useState } from "react";
 import Header from "../components/header";
 import Head from "next/head";
@@ -95,7 +95,7 @@ const Home = ({ pageInfo, experiences, skills, projects, socials }: Props) => {
 
 export default Home;
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const pageInfoArray = await fetchPageInfo();
   const experiences = await fetchExperience();
   const skills = await fetchSkills();
@@ -110,6 +110,5 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       projects,
       socials,
     },
-    revalidate: 10,
   };
 };

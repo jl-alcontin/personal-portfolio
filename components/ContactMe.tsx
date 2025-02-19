@@ -1,8 +1,7 @@
 import React from "react";
-import { EnvelopeIcon, MapPinIcon, PhoneIcon } from "@heroicons/react/24/solid";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { motion } from "framer-motion";
-import { Send, Sparkles } from "lucide-react";
+import { Send, Mail, Phone, MapPin } from "lucide-react";
 
 type Inputs = {
   name: string;
@@ -33,7 +32,7 @@ function ContactMe() {
 
   const contactInfo = [
     {
-      icon: PhoneIcon,
+      icon: Phone,
       label: "Phone",
       value: "09454605338",
       animation: {
@@ -42,7 +41,7 @@ function ContactMe() {
       },
     },
     {
-      icon: EnvelopeIcon,
+      icon: Mail,
       label: "Email",
       value: "jesrel203alcontin@gmail.com",
       animation: {
@@ -51,7 +50,7 @@ function ContactMe() {
       },
     },
     {
-      icon: MapPinIcon,
+      icon: MapPin,
       label: "Location",
       value: "Cogon Pardo Cebu City",
       animation: {

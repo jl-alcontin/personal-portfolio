@@ -3,8 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ["cdn.sanity.io"], // Add your allowed domains here
+    domains: ["cdn.sanity.io"],
   },
+  // Optimize bundle size
+  webpack: (config) => {
+    config.optimization.minimize = true;
+    return config;
+  }
 };
 
 module.exports = nextConfig;
