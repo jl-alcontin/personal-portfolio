@@ -11,13 +11,13 @@ export default function Header({ socials }: Props) {
   return (
     <header className="sticky top-0 p-5 z-20">
       <nav className="glass-card rounded-2xl max-w-7xl mx-auto">
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4">
           {/* Social Icons */}
           <motion.div
             initial={{ x: -500, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 1, type: "spring", stiffness: 100 }}
-            className="flex items-center space-x-4"
+            className="flex items-center space-x-2 sm:space-x-4"
           >
             {socials.map((social) => (
               <motion.div
@@ -31,7 +31,7 @@ export default function Header({ socials }: Props) {
                   url={social.url}
                   fgColor="#8BE8CB"
                   bgColor="transparent"
-                  className="relative"
+                  className="relative !h-8 !w-8 sm:!h-10 sm:!w-10"
                 />
               </motion.div>
             ))}
@@ -51,7 +51,7 @@ export default function Header({ socials }: Props) {
                   network="email"
                   fgColor="#8BE8CB"
                   bgColor="transparent"
-                  className="relative"
+                  className="relative !h-8 !w-8 sm:!h-10 sm:!w-10"
                 />
               </div>
               <motion.p
