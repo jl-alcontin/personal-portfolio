@@ -4,7 +4,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { urlFor } from "../sanity";
 import type { Project } from "../typings";
-import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  X,
+  Github,
+} from "lucide-react";
 import Image from "next/image";
 
 type Props = {
@@ -14,6 +20,7 @@ type Props = {
 function Projects({ projects }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const nextProject = () => {
     setDirection(1);
@@ -29,15 +36,16 @@ function Projects({ projects }: Props) {
 
   const getVisibleProjects = () => {
     if (projects.length === 1) {
-      return [{ project: projects[0], position: 0 }];
+      return [{ project: projects[0], position: 0, index: 0 }];
     }
 
     if (projects.length === 2) {
       return [
-        { project: projects[currentIndex], position: 0 },
+        { project: projects[currentIndex], position: 0, index: currentIndex },
         {
           project: projects[currentIndex === 0 ? 1 : 0],
           position: currentIndex === 0 ? 1 : -1,
+          index: currentIndex === 0 ? 1 : 0,
         },
       ];
     }
@@ -47,7 +55,7 @@ function Projects({ projects }: Props) {
       let index = currentIndex + position;
       if (index < 0) index = projects.length - 1;
       if (index >= projects.length) index = 0;
-      return { project: projects[index], position };
+      return { project: projects[index], position, index };
     });
   };
 
@@ -55,7 +63,8 @@ function Projects({ projects }: Props) {
     <motion.div
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
-      transition={{ duration: 1.5 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
       className="h-screen relative flex overflow-hidden flex-col text-left md:flex-row max-w-full justify-evenly mx-auto items-center z-0"
     >
       {/* Background Shapes */}
@@ -156,7 +165,7 @@ function Projects({ projects }: Props) {
 
         <div className="relative w-full max-w-7xl h-[600px] flex items-start justify-center px-8 sm:px-16">
           <AnimatePresence initial={false} custom={direction} mode="popLayout">
-            {getVisibleProjects().map(({ project, position }) => (
+            {getVisibleProjects().map(({ project, position, index }) => (
               <motion.div
                 key={`${project._id}-${position}`}
                 custom={direction}
@@ -193,63 +202,44 @@ function Projects({ projects }: Props) {
                   <motion.img
                     initial={{ y: -100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 1.2 }}
-                    className="w-40 h-44 sm:w-64 md:w-72 object-contain mx-auto"
+                    transition={{ duration: 0.2 }}
+                    viewport={{ once: true }}
+                    className="w-40 h-44 sm:w-64 md:w-72 object-contain mx-auto cursor-pointer 
+                             transition-all duration-300 hover:scale-105"
                     src={urlFor(project?.image).url()}
                     alt={project?.title}
+                    onClick={() => setSelectedProject(project)}
                   />
                   <h4 className="text-2xl md:text-4xl font-semibold text-center my-4">
                     <span className="text-primary-mint">
-                      Project {currentIndex + 1} of {projects.length}:
+                      Project {index + 1} of {projects.length}:
                     </span>{" "}
                     {project?.title}
                   </h4>
-                  <div className="flex items-center space-x-4 justify-center my-4">
-                    {project?.technologies.map((technology) => (
-                      <div key={technology._id} className="relative group/tech">
-                        <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-mint/50 to-primary-blue/50 rounded-full blur opacity-0 group-hover/tech:opacity-100 transition duration-300"></div>
-                        <Image
-                          className="relative w-10 h-10 rounded-full bg-primary-dark p-1 transition-transform duration-300 group-hover/tech:scale-110"
-                          src={
-                            urlFor(technology.image).url() || "/placeholder.svg"
-                          }
-                          alt={technology.title}
-                          width={40}
-                          height={40}
-                        />
-                      </div>
-                    ))}
-                  </div>
                   {position === 0 && (
                     <>
                       <p className="text-sm sm:text-base md:text-lg text-center text-primary-mint/80 mb-6">
                         {project?.summary}
                       </p>
-                      {project?.linkToBuild && (
-                        <div className="flex justify-center">
-                          <a
-                            href={project.linkToBuild}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group relative inline-flex items-center gap-2 px-6 py-3 bg-primary-dark/60 
+                      {/* {project?.linkToBuild && ( */}
+                      <div className="flex justify-center">
+                        <button
+                          onClick={() => setSelectedProject(project)}
+                          className="group relative inline-flex items-center gap-2 px-6 py-3 bg-primary-dark/60 
                                      text-primary-mint border border-primary-mint/30 rounded-lg overflow-hidden
                                      transition-all duration-300 hover:border-primary-mint/60"
-                          >
-                            <div
-                              className="absolute inset-0 bg-gradient-to-r from-primary-mint/20 via-primary-blue/20 to-primary-mint/20 
+                        >
+                          <div
+                            className="absolute inset-0 bg-gradient-to-r from-primary-mint/20 via-primary-blue/20 to-primary-mint/20 
                                           translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
-                            ></div>
-                            <span className="relative font-medium">
-                              View Project
-                            </span>
-                            <ExternalLink className="relative w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                            <div
-                              className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary-mint/60 to-primary-blue/60 
-                                          scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
-                            ></div>
-                          </a>
-                        </div>
-                      )}
+                          ></div>
+                          <span className="relative font-medium">
+                            View Details
+                          </span>
+                          <ExternalLink className="relative w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </button>
+                      </div>
+                      {/* )} */}
                     </>
                   )}
                 </div>
@@ -289,6 +279,116 @@ function Projects({ projects }: Props) {
           ))}
         </div>
       )}
+
+      {/* Project Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedProject(null)}
+            className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-5xl w-full glass-card rounded-xl mx-4 overflow-hidden"
+            >
+              {/* Header with close button */}
+              <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-10 bg-gradient-to-b from-primary-dark/90 to-transparent">
+                <h3 className="text-2xl sm:text-3xl font-bold text-primary-mint">
+                  {selectedProject?.title}
+                </h3>
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="p-2 rounded-full bg-primary-dark/60 text-primary-mint 
+                           hover:bg-primary-mint hover:text-primary-dark transition-all duration-300"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Project Image */}
+              <div className="relative w-full h-[300px] sm:h-[400px]">
+                <div className="absolute inset-0 bg-gradient-to-b from-primary-dark/50 to-transparent z-[1]" />
+                <motion.img
+                  initial={{ scale: 1.1, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-full h-full object-cover"
+                  src={urlFor(selectedProject?.image).url()}
+                  alt={selectedProject?.title}
+                />
+              </div>
+
+              {/* Content */}
+              <div className="p-6 sm:p-8 space-y-6">
+                {/* Technologies */}
+                <div className="flex flex-wrap gap-3">
+                  {selectedProject?.technologies.map((technology) => (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      key={technology._id}
+                      className="relative group/tech bg-primary-dark/60 px-3 py-1.5 rounded-full 
+                               border border-primary-mint/20 hover:border-primary-mint/40 transition-colors duration-300"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Image
+                          className="w-5 h-5 rounded-full"
+                          src={urlFor(technology.image).url()}
+                          alt={technology.title}
+                          width={20}
+                          height={20}
+                        />
+                        <span className="text-sm text-primary-mint/90">
+                          {technology.title}
+                        </span>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Description */}
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                  className="text-primary-mint/80 text-base sm:text-lg leading-relaxed"
+                >
+                  {selectedProject?.summary}
+                </motion.p>
+
+                {/* Action Buttons */}
+                {selectedProject?.linkToBuild && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="flex flex-wrap gap-4"
+                  >
+                    <a
+                      href={selectedProject.linkToBuild}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2 px-6 py-3 bg-primary-mint 
+                               text-primary-dark font-semibold rounded-lg
+                               transition-all duration-300 hover:bg-primary-mint/90"
+                    >
+                      <span>Visit Project</span>
+                      <ExternalLink className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </a>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
